@@ -40,7 +40,7 @@
     "requireSpacesInFunction": {
         "beforeOpeningCurlyBrace": true
     },
-    "validateIndentation": 4,
+    "validateIndentation": 2,
     "validateLineBreaks": "LF",
     "validateQuoteMarks": "'"
 }

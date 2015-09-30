@@ -12,6 +12,7 @@ var app = koa();
 var portalApp = koa();
 var router = new Router();
 portal.routes(router);
+portal.middleware(router);
 portalApp.use(router.routes());
 
 // Configure v1 of the JSON API
@@ -21,8 +22,8 @@ v1api.routes(apiRouter);
 v1apiApp.use(apiRouter.routes());
 
 // Mount the applications
-app.use(mount('/api/v1', v1apiApp));
 app.use(mount('/', portalApp));
+app.use(mount('/api/v1', v1apiApp));
 
 // Run the server
 var port = process.env.PORT || 3000;

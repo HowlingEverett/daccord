@@ -12,12 +12,14 @@ var app = koa();
 var portalApp = koa();
 var router = new Router();
 portal.routes(router);
+portal.middleware(router);
 portalApp.use(router.routes());
 
 // Configure v1 of the JSON API
 var v1apiApp = koa();
 var apiRouter = new Router();
 v1api.routes(apiRouter);
+v1api.middleware(apiRouter);
 v1apiApp.use(router.routes());
 
 // Mount the applications
@@ -26,5 +28,5 @@ app.use(mount('/api/v1', v1apiApp));
 
 // Run the server
 app.listen(3000, function() {
-    console.log('D\'accord portal running on port 3000');
+  console.log('D\'accord portal running on port 3000');
 });

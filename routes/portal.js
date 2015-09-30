@@ -1,3 +1,5 @@
+var portal = require('../portal');
+
 /**
  * Routes for the D'accord documentation portal application.
  * @param router {Object} An instance of koa-router for serving HTTP requests

@@ -1,0 +1,20 @@
+<div class="api-resource">
+    <h2>{{parentUri}}{{relativeUri}}</h2>
+    <div class="resource-description">
+        {{description}}
+    </div>
+
+    <div class="api-resource-methods">
+        <h3>Methods</h3>
+
+        {{#each methods}}
+
+        {{/each}}
+    </div>
+
+    <div class="api-sub-resources">
+        {{#each resources}}
+            {{> resource-summary parentUri=../relativeUri}}
+        {{/each}}
+    </div>
+</div>

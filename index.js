@@ -18,11 +18,11 @@ portalApp.use(router.routes());
 var v1apiApp = koa();
 var apiRouter = new Router();
 v1api.routes(apiRouter);
-v1apiApp.use(router.routes());
+v1apiApp.use(apiRouter.routes());
 
 // Mount the applications
-app.use(mount('/', portalApp));
 app.use(mount('/api/v1', v1apiApp));
+app.use(mount('/', portalApp));
 
 // Run the server
 var port = process.env.PORT || 3000;

@@ -25,6 +25,7 @@ app.use(mount('/', portalApp));
 app.use(mount('/api/v1', v1apiApp));
 
 // Run the server
-app.listen(3000, function() {
-    console.log('D\'accord portal running on port 3000');
+var port = process.env.PORT || 3000;
+app.listen(port, function() {
+    console.log('D\'accord portal running on port', port);
 });

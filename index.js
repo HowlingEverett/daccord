@@ -12,13 +12,14 @@ var app = koa();
 var portalApp = koa();
 var router = new Router();
 portal.routes(router);
-portal.middleware(router);
+portal.middleware(app, router);
 portalApp.use(router.routes());
 
 // Configure v1 of the JSON API
 var v1apiApp = koa();
 var apiRouter = new Router();
 v1api.routes(apiRouter);
+v1api.middleware(apiRouter);
 v1apiApp.use(apiRouter.routes());
 
 // Mount the applications

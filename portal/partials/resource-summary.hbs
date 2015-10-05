@@ -12,9 +12,11 @@
         {{/each}}
     </div>
 
+    {{#if resources}}
     <div class="api-sub-resources">
         {{#each resources}}
             {{> resource-summary parentUri=../relativeUri}}
         {{/each}}
     </div>
+    {{/if}}
 </div>

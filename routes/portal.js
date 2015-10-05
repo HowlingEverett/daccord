@@ -3,6 +3,19 @@ var path = require('path');
 var stripExtension = require('strip-extension');
 var koaHandlebars = require('koa-handlebars');
 var handlebars = require('handlebars');
+var serve = require('koa-static');
+
+// PostCSS Plugins
+var postcss = require('koa-postcss');
+var autoprefixer = require('autoprefixer');
+var cssImport = require('postcss-import');
+var cssVariables = require('postcss-custom-properties');
+var cssSelectors = require('postcss-custom-selectors');
+var cssNot = require('postcss-selector-not');
+var cssMatches = require('postcss-selector-matches');
+var cssInitial = require('postcss-initial');
+
+// Handlers for the portal application
 var portal = require('../portal');
 
 /**
@@ -15,9 +28,13 @@ module.exports.routes = function(router) {
 
 /**
  * Common middleware for the D'accord documentation portal application
- * @param {object} router An instance of koa-router
+ * @param {object} app a koa app instance, for hooking middleware that might play with routes and
+ * interfere with normal routing e.g. koa-static.
+ * @param {object} router An instance of koa-router, for hooking middleware on the routes
+ * themselves.
  */
-module.exports.middleware = function(router) {
+module.exports.middleware = function(app, router) {
+  // Handlebars rendering
   router.use(koaHandlebars({
     handlebars: handlebars,
     defaultLayout: 'portal',
@@ -26,4 +43,20 @@ module.exports.middleware = function(router) {
       return stripExtension(file);
     }
   }));
+
+  // Automatic CSSNext compilation
+  app.use(postcss({
+    src: './portal/client/css/portal.css',
+    dest: './portal/public/css',
+    plugins: [
+      cssImport(),
+      cssVariables(),
+      cssSelectors(),
+      cssInitial(),
+      cssNot(),
+      cssMatches(),
+      autoprefixer()
+    ]
+  }));
+  app.use(serve('portal/public'));
 };

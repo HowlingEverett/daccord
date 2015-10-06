@@ -5,11 +5,21 @@
     </div>
 
     <div class="api-resource-methods">
-        <h3>Methods</h3>
-
-        {{#each methods}}
-
-        {{/each}}
+        <ul class="nav nav-tabs">
+            {{#each methods}}
+            <li class="nav-item">
+                <a href="#{{slug ../displayName}}-{{method}}" class="nav-link"
+                   role="tab" data-toggle="tab">{{method}}</a>
+            </li>
+            {{/each}}
+        </ul>
+        <div class="tab-content">
+            {{#each methods}}
+            <div role="tabpanel" class="tab-pane" id="{{slug ../displayName}}-{{method}}">
+                {{description}}
+            </div>
+            {{/each}}
+        </div>
     </div>
 
     {{#if resources}}

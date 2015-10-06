@@ -1,5 +1,9 @@
 var raml = require('../raml');
 
+/**
+ *
+ * @returns {string}
+ */
 module.exports.apiList = function*() {
   try {
     var apiSpec = yield raml.loadApi();

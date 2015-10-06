@@ -34,6 +34,7 @@ module.exports.routes = function(router) {
  * themselves.
  */
 module.exports.middleware = function(app, router) {
+  let cache = process.env.NODE_ENV !== 'development';
   // Handlebars rendering
   router.use(koaHandlebars({
     handlebars: handlebars,
@@ -41,7 +42,8 @@ module.exports.middleware = function(app, router) {
     root: path.resolve(__dirname, '../portal'),
     partialId: function(file) {
       return stripExtension(file);
-    }
+    },
+    cache: cache
   }));
 
   // Automatic CSSNext compilation

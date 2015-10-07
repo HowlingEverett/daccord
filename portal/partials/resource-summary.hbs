@@ -5,20 +5,13 @@
     </div>
 
     <div class="api-resource-methods">
-        <ul class="nav nav-tabs">
-            {{#each methods}}
-            <li class="nav-item">
-                <a href="#{{slug ../displayName}}-{{method}}" class="nav-link"
-                   role="tab" data-toggle="tab">{{method}}</a>
-            </li>
-            {{/each}}
-        </ul>
+        {{> components/tabs panels=tabs}}
         <div class="tab-content">
-            {{#each methods}}
-            <div role="tabpanel" class="tab-pane" id="{{slug ../displayName}}-{{method}}">
-                {{description}}
-            </div>
-            {{/each}}
+        {{#each tabs}}
+            {{#> components/tabpanel}}
+            {{method.description}}
+            {{/components/tabpanel}}
+        {{/each}}
         </div>
     </div>
 

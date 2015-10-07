@@ -1,0 +1,9 @@
+<ul class="nav nav-tabs" role="tablist">
+    {{#each panels}}
+    <li class="nav-item">
+        <a class="nav-link" href="#{{id}}" role="tab" data-toggle="tab" aria-controls="{{id}}">
+            {{label}}
+        </a>
+    </li>
+    {{/each}}
+</ul>

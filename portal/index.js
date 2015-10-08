@@ -9,7 +9,7 @@ var service = require('./service');
 module.exports.apiList = function*() {
   try {
     let apiList = yield service.listTabs(this.query.apipath);
-    yield this.render('api-list', apiList);
+    yield this.render('api-list', apiList, {preventIndent: true});
   } catch(e) {
     if (e.name === 'YAMLError') {
       return this.body = 'Could not load RAML at specified path';

@@ -9,7 +9,36 @@
         <div class="tab-content">
         {{#each tabs}}
             {{#> components/tabpanel}}
-            {{method.description}}
+            <h3>Example Request</h3>
+
+            <div class="example-request">
+                <code>{{label}} {{method.exampleUri}}</code>
+
+                {{#if method.exampleRequestBody}}
+                <pre>
+                    <code class="language-json">
+                        {{method.exampleRequestBody}}
+                    </code>
+                </pre>
+                {{/if}}
+            </div>
+
+            <div class="example-responses">
+                {{#each method.responses}}
+                <div class="example-response">
+                    <h4>{{code}}</h4>
+                    {{#each contentTypes}}
+                    <h5>{{contentType}}</h5>
+
+                    <pre>
+                        <code class="language-{{contentType}}">
+                            {{example}}
+                        </code>
+                    </pre>
+                    {{/each}}
+                </div>
+                {{/each}}
+            </div>
             {{/components/tabpanel}}
         {{/each}}
         </div>

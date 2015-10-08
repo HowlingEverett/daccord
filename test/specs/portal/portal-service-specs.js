@@ -73,6 +73,26 @@ test('loads example URLs based on included examples', function(t) {
   t.end();
 });
 
+test('Reprocesses responses into an iterable property', function(t) {
+  var firstGet = apiSpec.resources[0].tabs[0].method;
+  t.ok(firstGet.responses instanceof Array, 'Responses object converted to array');
+  t.deepEqual(firstGet.responses.map(function(response) {
+    return response.code;
+  }), ['200', '400'], 'Responses an array of the response codes object');
+  var okResponse = firstGet.responses[0];
+  t.deepEqual(okResponse.contentTypes.map(function(contentType) {
+    return contentTypes.contentType;
+  }), ['application/json'], 'Response content types is an array of the content types');
+  t.ok(okResponse.contentTypes[0].example, 'Content type object has example');
+  t.ok(okResponse.contentTypes[0].schema, 'Content type object has schema');
+  t.end();
+});
+
+test('Reprocesses request bodies into an iterable property', function(t) {
+
+  t.end();
+});
+
 test('End API List Transformation Tests', function(t) {
   raml.loadApi.restore();
   t.end();

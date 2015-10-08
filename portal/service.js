@@ -48,6 +48,12 @@ function processTabs(resource, pathComponents, apiSpec) {
 }
 
 function augmentMethod(method, pathComponents, apiSpec) {
+  method = buildExampleUri(method, pathComponents, apiSpec);
+  method.responses = buildResponsesArray(method);
+  return method;
+}
+
+function buildExampleUri(method, pathComponents, apiSpec) {
   var baseUri = apiSpec.baseUri.replace('{version}', apiSpec.version);
   var path = pathComponents.join('/');
   var query = buildQuery(method.queryParameters);
@@ -56,8 +62,20 @@ function augmentMethod(method, pathComponents, apiSpec) {
   if (query) {
     method.exampleUri += '?' + query;
   }
-
   return method;
+}
+
+function buildResponsesArray(method) {
+  return Object.keys(method.responses).map(function(responseCode) {
+    var response = method.responses[responseCode];
+    response.code = responseCode;
+    response.contentTypes = Object.keys(response.body).map(function(contentType) {
+      var responseData = response.body[contentType];
+      responseData.contentType = contentType;
+      return responseData;
+    });
+    return response;
+  });
 }
 
 function buildQuery(queryParams) {

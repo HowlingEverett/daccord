@@ -1,6 +1,20 @@
 <h1 class="display-2">{{title}}</h1>
 
+<div class="api-documentation">
+    {{#each documentation}}
+    <div class="api-document">
+        <h2>{{title}}</h2>
+
+        <div class="api-document-content">
+            {{markdown content}}
+        </div>
+    </div>
+    {{/each}}
+</div>
+
 <div class="api-list">
+    <h2>API Resources</h2>
+
     {{#each resources}}
         {{> resource-summary}}
     {{/each}}

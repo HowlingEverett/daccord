@@ -1,5 +1,5 @@
 <div class="api-resource">
-    <h2>{{parentUri}}{{relativeUri}}</h2>
+    <h3>{{parentUri}}{{relativeUri}}</h3>
     <div class="resource-description">
         {{description}}
     </div>
@@ -9,7 +9,7 @@
         <div class="tab-content">
         {{#each tabs}}
             {{#> components/tabpanel}}
-            <h3>Example Request</h3>
+            <h4>Example Request</h4>
 
             <div class="example-request">
                 <code>{{label}} {{method.exampleUri}}</code>
@@ -26,9 +26,9 @@
             <div class="example-responses">
                 {{#each method.responses}}
                 <div class="example-response">
-                    <h4>{{code}}</h4>
+                    <h5>{{code}}</h5>
                     {{#each contentTypes}}
-                    <h5>{{contentType}}</h5>
+                    <h6>{{contentType}}</h6>
 
                     <pre>
                         <code class="language-{{contentType}}">

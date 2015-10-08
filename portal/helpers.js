@@ -2,6 +2,7 @@
 
 let Handlebars = require('handlebars');
 let slug = require('slug');
+let marked = require('marked');
 
 /**
  * Slugifies a string, removing spaces and non-url-compatible characters, and replacing
@@ -16,4 +17,8 @@ module.exports.slug = function(str) {
   } catch (e) {
     return '';
   }
+};
+
+module.exports.markdown = function(markdownString) {
+  return new Handlebars.SafeString(marked(markdownString));
 };

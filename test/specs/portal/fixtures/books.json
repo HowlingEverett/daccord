@@ -1,0 +1,71 @@
+{
+  "title": "Test book API specification",
+  "baseUri": "http://localhost:3000/api/{version}",
+  "protocols": [
+    "HTTP"
+  ],
+  "version": "v1",
+  "mediaType": "application/json",
+  "resources": [
+    {
+      "displayName": "Books",
+      "relativeUri": "/books",
+      "relativeUriPathSegments": [
+        "books"
+      ],
+      "methods": [
+        {
+          "method": "get",
+          "protocols": [
+            "HTTP"
+          ],
+          "description": "Search a collection of books",
+          "queryParameters": {
+            "title": {
+              "description": "Fuzzy match on book title",
+              "type": "string",
+              "example": "Return of the King",
+              "displayName": "Title Search",
+              "required": false
+            },
+            "author": {
+              "description": "Fuzzy match on author",
+              "type": "string",
+              "example": "Tolkien",
+              "displayName": "Author Search",
+              "required": false
+            }
+          }
+        }
+      ],
+      "resources": [
+        {
+          "displayName": "Book Details",
+          "relativeUri": "/{title}",
+          "relativeUriPathSegments": [
+            "{title}"
+          ],
+          "methods": [
+            {
+              "method": "get",
+              "protocols": [
+                "HTTP"
+              ],
+              "description": "Details for a book"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "baseUriParameters": {
+    "version": {
+      "type": "string",
+      "required": true,
+      "displayName": "version",
+      "enum": [
+        "v1"
+      ]
+    }
+  }
+}

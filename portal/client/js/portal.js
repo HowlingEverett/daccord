@@ -1,3 +1,5 @@
+'use strict';
+
 window.jQuery = window.$ = require('jquery');
 require('../vendor/bootstrap-4.0.0-alpha/dist/js/umd/util');
 require('../vendor/bootstrap-4.0.0-alpha/dist/js/umd/tab');

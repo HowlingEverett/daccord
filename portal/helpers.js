@@ -1,3 +1,5 @@
+'use strict';
+
 let Handlebars = require('handlebars');
 let slug = require('slug');
 

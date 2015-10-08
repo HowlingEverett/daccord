@@ -1,3 +1,5 @@
+'use strict';
+
 var koa = require('koa');
 var mount = require('koa-mount');
 var Router = require('koa-router');
@@ -29,5 +31,5 @@ app.use(mount('/api/v1', v1apiApp));
 // Run the server
 var port = process.env.PORT || 3000;
 app.listen(port, function() {
-    console.log('D\'accord portal running on port', port);
+  console.log('D\'accord portal running on port', port);
 });

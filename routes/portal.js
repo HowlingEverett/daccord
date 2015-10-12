@@ -47,7 +47,7 @@ module.exports.middleware = function(app, router) {
     defaultLayout: 'portal',
     root: path.resolve(__dirname, '../portal'),
     partialId: function(file) {
-      return stripExtension(file);
+      return stripExtension(file).replace('\\', '/');
     },
     helpers: portalHelpers,
     cache: cache

@@ -14,13 +14,21 @@
             <div class="example-request">
                 <code>{{label}} {{method.exampleUri}}</code>
 
-                {{#if method.exampleRequestBody}}
-                <pre>
-                    <code class="language-json">
-                        {{method.exampleRequestBody}}
-                    </code>
-                </pre>
+                {{#if method.body}}
+                <h4>Request Body</h4>
                 {{/if}}
+
+                {{#each method.body}}
+                <h5>{{contentType}}</h5>
+
+                <h6>Example</h6>
+                <pre><code class="language-javascript">{{example}}</code></pre>
+
+                {{#if schema}}
+                <h6>Schema</h6>
+                <pre><code class="language-javascript">{{schema}}</code></pre>
+                {{/if}}
+                {{/each}}
             </div>
 
             <div class="example-responses">
@@ -30,11 +38,13 @@
                     {{#each contentTypes}}
                     <h6>{{contentType}}</h6>
 
-                    <pre>
-                        <code class="language-{{contentType}}">
-                            {{example}}
-                        </code>
-                    </pre>
+                    <h6>Example</h6>
+                    <pre><code class="language-{{languageFromContentType contentType}}">{{example}}</code></pre>
+
+                    {{#if schema}}
+                    <h6>Schema</h6>
+                    <pre><code class="language-{{languageFromContentType contentType}}">{{schema}}</code></pre>
+                    {{/if}}
                     {{/each}}
                 </div>
                 {{/each}}

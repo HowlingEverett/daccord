@@ -48,7 +48,10 @@ function processTabs(resource, pathComponents, apiSpec) {
 }
 
 function augmentMethod(method, pathComponents, apiSpec) {
-  method = buildExampleUri(method, pathComponents, apiSpec);
+  method.exampleUri = buildExampleUri(method, pathComponents, apiSpec);
+  if (method.body) {
+    method.body = buildBodiesArray(method);
+  }
   method.responses = buildResponsesArray(method);
   return method;
 }
@@ -57,12 +60,11 @@ function buildExampleUri(method, pathComponents, apiSpec) {
   var baseUri = apiSpec.baseUri.replace('{version}', apiSpec.version);
   var path = pathComponents.join('/');
   var query = buildQuery(method.queryParameters);
-
-  method.exampleUri = `${baseUri}/${path}`;
+  var exampleUri = `${baseUri}/${path}`;
   if (query) {
-    method.exampleUri += '?' + query;
+    exampleUri += '?' + query;
   }
-  return method;
+  return exampleUri;
 }
 
 function buildResponsesArray(method) {
@@ -75,6 +77,14 @@ function buildResponsesArray(method) {
       return responseData;
     });
     return response;
+  });
+}
+
+function buildBodiesArray(method) {
+  return Object.keys(method.body).map(function(contentType) {
+    var body = method.body[contentType];
+    body.contentType = contentType;
+    return body;
   });
 }
 

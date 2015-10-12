@@ -1,44 +1,12 @@
 'use strict';
 
-var test = require('tape');
-var Test = require('tape/lib/test');
-var co = require('co');
 var sinon = require('sinon');
 require('sinon-as-promised');
 
+var test = require('../../tape-as-promised');
 var raml = require('../../../raml');
 var portalService = require('../../../portal/service');
 
-// Override the run prototype to handle generator or promise callbacks
-Test.prototype.run = function() {
-  if (this._skip) {
-    return this.end();
-  }
-  this.emit('prerun');
-  try {
-    var callback = this._cb && this._cb(this);
-    var isGenerator = checkGenerator(callback);
-    var isPromise = checkPromise(callback);
-    var self = this;
-    if (isGenerator) {
-      callback = co(callback);
-      isPromise = true;
-    }
-    if (isPromise) {
-      callback.then(function() {
-        self.end();
-      }, function(err) {
-        self.error(err);
-        self.end();
-      });
-    }
-  } catch(err) {
-    this.error(err);
-    this.end();
-    return;
-  }
-  this.emit('run');
-};
 
 // Fixture containing the output of raml-parser for a sample book API
 var testApi = require('./fixtures/books.json');
@@ -81,7 +49,7 @@ test('Reprocesses responses into an iterable property', function(t) {
   }), ['200', '400'], 'Responses an array of the response codes object');
   var okResponse = firstGet.responses[0];
   t.deepEqual(okResponse.contentTypes.map(function(contentType) {
-    return contentTypes.contentType;
+    return contentType.contentType;
   }), ['application/json'], 'Response content types is an array of the content types');
   t.ok(okResponse.contentTypes[0].example, 'Content type object has example');
   t.ok(okResponse.contentTypes[0].schema, 'Content type object has schema');
@@ -100,12 +68,4 @@ test('End API List Transformation Tests', function(t) {
 
 function stubRamlParser(ramlJSON) {
   return sinon.stub(raml, 'loadApi').resolves(ramlJSON);
-}
-
-function checkPromise(p) {
-  return p && p.then && typeof p.then === 'function';
-}
-
-function checkGenerator(g) {
-  return g && typeof g.next === 'function' && typeof g.throw === 'function';
 }

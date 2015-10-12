@@ -41,26 +41,11 @@ function buildResourceDescription(resourceName, apiSpec) {
     // segements.
     return resource.relativeUriPathSegments.indexOf(resourceName) !== -1;
   });
-  let availableMethods = findAvailableMethods(resource);
   let methodsArray = flattenMethods(resource,
     apiSpec.baseUri.replace('{version}', apiSpec.version));
   return {
-    availableMethods: availableMethods,
     methods: methodsArray
   };
-}
-
-function findAvailableMethods(resource) {
-  let availableMethods = _.map(resource.methods, function(methodObj) {
-    return methodObj.method.toUpperCase();
-  });
-  if (resource.resources) {
-    resource.resources.forEach(function(subResource) {
-      availableMethods = availableMethods
-        .concat(findAvailableMethods(subResource));
-    });
-  }
-  return availableMethods;
 }
 
 function flattenMethods(resource, apiRoot, basePath) {

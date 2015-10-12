@@ -50,7 +50,10 @@ module.exports.middleware = function(app, router) {
       return stripExtension(file);
     },
     helpers: portalHelpers,
-    cache: cache
+    cache: cache,
+    compileOptions: {
+      preventIndent: true
+    }
   }));
 
   // Automatic CSSNext compilation

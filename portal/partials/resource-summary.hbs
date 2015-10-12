@@ -22,19 +22,11 @@
                 <h5>{{contentType}}</h5>
 
                 <h6>Example</h6>
-                <pre>
-                    <code class="language-javascript">
-                        {{example}}
-                    </code>
-                </pre>
+                <pre><code class="language-javascript">{{example}}</code></pre>
 
                 {{#if schema}}
                 <h6>Schema</h6>
-                <pre>
-                    <code class="language-javascript">
-                        {{schema}}
-                    </code>
-                </pre>
+                <pre><code class="language-javascript">{{schema}}</code></pre>
                 {{/if}}
                 {{/each}}
             </div>
@@ -47,19 +39,11 @@
                     <h6>{{contentType}}</h6>
 
                     <h6>Example</h6>
-                    <pre>
-                        <code class="language-{{languageFromContentType contentType}}">
-                            {{example}}
-                        </code>
-                    </pre>
+                    <pre><code class="language-{{languageFromContentType contentType}}">{{example}}</code></pre>
 
                     {{#if schema}}
                     <h6>Schema</h6>
-                    <pre>
-                        <code class="language-{{languageFromContentType contentType}}">
-                            {{schema}}
-                        </code>
-                    </pre>
+                    <pre><code class="language-{{languageFromContentType contentType}}">{{schema}}</code></pre>
                     {{/if}}
                     {{/each}}
                 </div>

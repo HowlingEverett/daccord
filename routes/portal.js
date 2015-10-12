@@ -68,6 +68,7 @@ module.exports.middleware = function(app, router) {
     ]
   }));
   app.use(serve('portal/public'));
+  app.use(serve('node_modules/prismjs/themes'));
 
   // Automatic Browserify
   // Serve main client-side bundle for UI

@@ -19,6 +19,30 @@ module.exports.slug = function(str) {
   }
 };
 
+/**
+ * Parse a markdown string into resulting HTML markup.
+ * @param {string} markdownString A string containing markdown syntax text
+ * @returns {Handlebars.SafeString} Non-escaping HTML for rendering in-page.
+ * This will be safe because the Markdown parser generates good HTML.
+ */
 module.exports.markdown = function(markdownString) {
   return new Handlebars.SafeString(marked(markdownString));
+};
+
+/**
+ * Returns the language component of a standard content type string.
+ * @param {string} contentType content type string such as 'application/javascript'
+ * @returns {string} the language component, e.g. 'javascript'
+ */
+module.exports.languageFromContentType = function(contentType) {
+  let specialCases = {
+    json: 'javascript',
+    html: 'markup'
+  };
+  let languageType;
+  if (contentType.indexOf('/') < 0) {
+    languageType = contentType;
+  }
+  languageType = contentType.split('/')[1];
+  return specialCases[languageType] || languageType;
 };

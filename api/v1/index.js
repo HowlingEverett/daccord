@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path');
+var url = require('url');
 
 var _ = require('underscore');
 var ramlParser = require('raml-parser');
@@ -41,16 +42,17 @@ function buildResourceDescription(resourceName, apiSpec) {
     return resource.relativeUriPathSegments.indexOf(resourceName) !== -1;
   });
   let availableMethods = findAvailableMethods(resource);
-  let schemas = getBodySchemas(availableMethods, resource);
+  let methodsArray = flattenMethods(resource,
+    apiSpec.baseUri.replace('{version}', apiSpec.version));
   return {
     availableMethods: availableMethods,
-    bodies: schemas
+    methods: methodsArray
   };
 }
 
 function findAvailableMethods(resource) {
   let availableMethods = _.map(resource.methods, function(methodObj) {
-    return methodObj.method.toUppercase();
+    return methodObj.method.toUpperCase();
   });
   if (resource.resources) {
     resource.resources.forEach(function(subResource) {
@@ -61,25 +63,38 @@ function findAvailableMethods(resource) {
   return availableMethods;
 }
 
-function getBodySchemas(availableMethods, resource) {
-  let method;
-  if (availableMethods.indexOf('POST') >= 0) {
-    method = _.find(resource.methods, function(methodObj) {
-      return methodObj.method === 'post';
-    });
-  } else if (availableMethods.indexOf('PUT') >= 0) {
-    resource.resources.forEach(function(subResource) {
-      subResource.methods.forEach(function(methodObj) {
-        if (methodObj.method === 'put') {
-          method = methodObj;
-        }
+function flattenMethods(resource, basePath) {
+  let methods = [];
+  let absoluteUri = basePath + resource.relativeUri;
+  resource.methods.forEach(function(method) {
+    if (method.body) {
+      method.body = parseBodySchemas(method.body);
+    }
+    if (method.responses) {
+      _.each(method.responses, function(response) {
+        response.body = parseBodySchemas(response.body);
       });
+    }
+    method.absoluteUri = absoluteUri;
+    method.method = method.method.toUpperCase();
+    methods.push(method);
+  });
+  if (resource.resources) {
+    resource.resources.forEach(function(subResource) {
+      methods = methods.concat(flattenMethods(subResource, absoluteUri));
     });
   }
-  if (!method) {
-    return [];
-  }
-  return _.map(method.body, function(contentType, key) {
-    return _.extend({contentType: key}, contentType);
+  return methods;
+}
+
+function parseBodySchemas(bodyObj) {
+  _.each(bodyObj, function(body, contentType) {
+    if (body.schema) {
+      body.schema = JSON.parse(body.schema);
+    }
+    if (body.example) {
+      body.example = JSON.parse(body.example);
+    }
   });
+  return bodyObj;
 }

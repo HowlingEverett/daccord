@@ -63,9 +63,11 @@ function findAvailableMethods(resource) {
   return availableMethods;
 }
 
-function flattenMethods(resource, basePath) {
+function flattenMethods(resource, apiRoot, basePath) {
   let methods = [];
-  let absoluteUri = basePath + resource.relativeUri;
+  basePath = basePath || '';
+  let absoluteUri = apiRoot + basePath + resource.relativeUri;
+  let relativeUri = basePath + resource.relativeUri;
   resource.methods.forEach(function(method) {
     if (method.body) {
       method.body = parseBodySchemas(method.body);
@@ -76,12 +78,17 @@ function flattenMethods(resource, basePath) {
       });
     }
     method.absoluteUri = absoluteUri;
+    method.relativeUri = relativeUri;
+    // GET and No {} means this URI is for a collection
+    method.collection = method.method === 'get' &&
+      absoluteUri.indexOf('{') < 0;
     method.method = method.method.toUpperCase();
     methods.push(method);
   });
   if (resource.resources) {
     resource.resources.forEach(function(subResource) {
-      methods = methods.concat(flattenMethods(subResource, absoluteUri));
+      methods = methods.concat(
+        flattenMethods(subResource, apiRoot, relativeUri));
     });
   }
   return methods;

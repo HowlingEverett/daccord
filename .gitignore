@@ -2,3 +2,5 @@ node_modules
 .idea
 api_definitions
 portal/public
+coverage
+

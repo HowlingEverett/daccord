@@ -5,11 +5,13 @@ let slug = require('slug');
 let marked = require('marked');
 
 /**
- * Slugifies a string, removing spaces and non-url-compatible characters, and replacing
- * them with hyphens. Also lower-cases everything. Basically creates a URL 'slug'. Gracefully
- * degrades: if you pass it a bad value, it will simply return an empty string.
+ * Slugifies a string, removing spaces and non-url-compatible characters, and
+ * replacing them with hyphens. Also lower-cases everything. Basically creates
+ * a URL 'slug'. Gracefully degrades: if you pass it a bad value, it will simply
+ * return an empty string.
  * @param {string} str input string you want to slugify
- * @returns {string} Processed string, with invalid characters replaced by hyphens
+ * @returns {string} Processed string, with invalid characters replaced by
+ * hyphens
  */
 module.exports.slug = function(str) {
   try {
@@ -31,7 +33,8 @@ module.exports.markdown = function(markdownString) {
 
 /**
  * Returns the language component of a standard content type string.
- * @param {string} contentType content type string such as 'application/javascript'
+ * @param {string} contentType content type string such as
+ * 'application/javascript'
  * @returns {string} the language component, e.g. 'javascript'
  */
 module.exports.languageFromContentType = function(contentType) {

@@ -57,7 +57,12 @@ test('Reprocesses responses into an iterable property', function(t) {
 });
 
 test('Reprocesses request bodies into an iterable property', function(t) {
-
+  var firstPost = apiSpec.resources[0].resources[0].tabs[1].method;
+  t.ok(firstPost.body instanceof Array, 'Body object converted to iterable.');
+  t.equal(firstPost.body[0].contentType, 'application/json',
+    'contentType property set on each body type');
+  t.ok(firstPost.body[0].example, 'Example still exists on object');
+  t.ok(firstPost.body[0].schema, 'Schema still exists on object');
   t.end();
 });
 

@@ -46,3 +46,19 @@ module.exports.languageFromContentType = function(contentType) {
   languageType = contentType.split('/')[1];
   return specialCases[languageType] || languageType;
 };
+
+/**
+ * Joins an array of strings into a comma-separated list for visual printing.
+ * For example, passing ['Bob', 'Andy', 'Nick'] would return 'Bob, Andy, Nic'.
+ * @param {array} strings Array of strings to join.
+ * @returns {string} processed string
+ */
+module.exports.commaValues = function(strings) {
+  return strings.join(', ');
+};
+
+module.exports.uppercase = function(value) {
+  if (typeof value === 'string') {
+    return value.toUpperCase();
+  }
+};

@@ -1,17 +1,72 @@
 <div class="api-resource">
     <h3>{{parentUri}}{{relativeUri}}</h3>
-    <div class="resource-description">
-        {{description}}
-    </div>
 
     <div class="api-resource-methods">
         {{> components/tabs panels=tabs}}
         <div class="tab-content">
         {{#each tabs}}
             {{#> components/tabpanel}}
-            <h4>Example Request</h4>
+
+            <div class="resource-description">
+                <p>{{method.description}}</p>
+            </div>
+
+            <div class="resource-information">
+                <h4>Resource URL</h4>
+
+                <p>
+                    <code>{{method.absoluteUri}}</code>
+                </p>
+
+                <h4>Resource Information</h4>
+
+                <dl class="method-information dl-horizontal row">
+                    <dt class="col-sm-4">
+                        Method
+                    </dt>
+                    <dd class="col-sm-8">
+                        {{method.method}}
+                    </dd>
+                    <dt class="col-sm-4">
+                        Response Formats
+                    </dt>
+                    <dd class="col-sm-8">
+                        {{commaValues method.responseTypes}}
+                    </dd>
+
+                    <dt class="col-sm-4">
+                        Requires Authentication
+                    </dt>
+                    <dd class="col-sm-8">
+                        Yes
+                    </dd>
+                </dl>
+            </div>
+
+            {{#if method.queryParameters}}
+            <div class="method-query-parameters">
+                <h4>Parameters</h4>
+
+                {{#each method.queryParameters}}
+                <dl class="method-query-parameter dl-horizontal row">
+                    <dt class="query-parameter-name col-sm-4">
+                        {{param}}
+                        {{#if required}}<div class="required">Required</div>{{/if}}
+                    </dt>
+                    <dd class="query-parameter-description col-sm-8">
+                        <p>{{description}}</p>
+                        {{#if example}}
+                        <p><strong>Example:</strong> {{example}}</p>
+                        {{/if}}
+                    </dd>
+                </dl>
+                {{/each}}
+            </div>
+            {{/if}}
 
             <div class="example-request">
+                <h4>Example Request</h4>
+
                 <code>{{label}} {{method.exampleUri}}</code>
 
                 {{#if method.body}}

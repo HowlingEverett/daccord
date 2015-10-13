@@ -1,9 +1,6 @@
 'use strict';
 
-let querystring = require('querystring');
-
 let slug = require('slug');
-let capitalize = require('capitalize');
 let _ = require('underscore');
 
 let raml = require('../raml');
@@ -48,20 +45,25 @@ function processTabs(resource, pathComponents, apiSpec) {
 }
 
 function augmentMethod(method, pathComponents, apiSpec) {
-  method.exampleUri = buildExampleUri(method, pathComponents, apiSpec);
+  method.exampleUri = buildExampleUri(method, pathComponents, apiSpec, true);
+  method.absoluteUri = buildExampleUri(method, pathComponents, apiSpec, false);
   if (method.body) {
     method.body = buildBodiesArray(method);
   }
+  method.responseTypes = Object.keys(method.responses['200'].body);
   method.responses = buildResponsesArray(method);
+  if (method.queryParameters) {
+    method.queryParameters = buildParamsArray(method.queryParameters);
+  }
   return method;
 }
 
-function buildExampleUri(method, pathComponents, apiSpec) {
+function buildExampleUri(method, pathComponents, apiSpec, includeParams) {
   var baseUri = apiSpec.baseUri.replace('{version}', apiSpec.version);
   var path = pathComponents.join('/');
   var query = buildQuery(method.queryParameters);
   var exampleUri = `${baseUri}/${path}`;
-  if (query) {
+  if (query && includeParams) {
     exampleUri += '?' + query;
   }
   return exampleUri;
@@ -85,6 +87,14 @@ function buildBodiesArray(method) {
     var body = method.body[contentType];
     body.contentType = contentType;
     return body;
+  });
+}
+
+function buildParamsArray(paramsObj) {
+  return Object.keys(paramsObj).map(function(param) {
+    var paramConfig = paramsObj[param];
+    paramConfig.param = param;
+    return paramConfig;
   });
 }
 

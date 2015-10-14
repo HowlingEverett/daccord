@@ -48,12 +48,12 @@ function augmentMethod(method, pathComponents, apiSpec) {
   method.exampleUri = buildExampleUri(method, pathComponents, apiSpec, true);
   method.absoluteUri = buildExampleUri(method, pathComponents, apiSpec, false);
   if (method.body) {
-    method.body = buildBodiesArray(method);
+    method.body = objectToArray(method.body, 'contentType');
   }
   method.responseTypes = Object.keys(method.responses['200'].body);
   method.responses = buildResponsesArray(method);
   if (method.queryParameters) {
-    method.queryParameters = buildParamsArray(method.queryParameters);
+    method.queryParameters = objectToArray(method.queryParameters, 'param');
   }
   return method;
 }
@@ -73,28 +73,16 @@ function buildResponsesArray(method) {
   return Object.keys(method.responses).map(function(responseCode) {
     var response = method.responses[responseCode];
     response.code = responseCode;
-    response.contentTypes = Object.keys(response.body).map(function(contentType) {
-      var responseData = response.body[contentType];
-      responseData.contentType = contentType;
-      return responseData;
-    });
+    response.contentTypes = objectToArray(response.body, 'contentType');
     return response;
   });
 }
 
-function buildBodiesArray(method) {
-  return Object.keys(method.body).map(function(contentType) {
-    var body = method.body[contentType];
-    body.contentType = contentType;
-    return body;
-  });
-}
-
-function buildParamsArray(paramsObj) {
-  return Object.keys(paramsObj).map(function(param) {
-    var paramConfig = paramsObj[param];
-    paramConfig.param = param;
-    return paramConfig;
+function objectToArray(obj, keyName) {
+  return Object.keys(obj).map(function(key) {
+    var val = obj[key];
+    val[keyName] = key;
+    return val;
   });
 }
 

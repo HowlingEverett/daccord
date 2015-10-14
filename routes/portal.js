@@ -47,7 +47,6 @@ module.exports.middleware = function(app, router) {
     defaultLayout: 'portal',
     root: path.resolve(__dirname, '../portal'),
     partialId: function(file) {
-      console.error('TRYING TO LOAD', file);
       return stripExtension(file).replace('\\', '/');
     },
     helpers: portalHelpers,
@@ -98,6 +97,6 @@ function wrapBrowserifyMiddleware(path, opts) {
       };
 
       middleware(req, res, next);
-    }
-  }
+    };
+  };
 }

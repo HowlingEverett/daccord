@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "definitions": {
+    "paging": {
+      "type": "object",
+      "properties": {
+        "requested_page": {
+          "description": "The page of results returned in this response",
+          "type": "number"
+        },
+        "records_per_page": {
+          "type": "number",
+          "description": "Maximum number of items requested per page"
+        },
+        "total_pages": {
+          "type": "number",
+          "description": "How many pages available (based on the items_per_page setting and the total items)."
+        },
+        "total_records": {
+          "type": "number",
+          "description": "Total record count for this resource, regardless of paging."
+        }
+      },
+      "required": ["requested_page", "items_per_page", "total_pages", "total_records"]
+    }
+  }
+}

@@ -3,4 +3,4 @@ node_modules
 api_definitions
 portal/public
 coverage
-
+npm-debug.log*

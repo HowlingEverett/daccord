@@ -67,6 +67,7 @@
     "raml-parser": "^0.8.11",
     "slug": "^0.9.1",
     "strip-extension": "^1.1.0",
+    "traverse-async": "^0.1.6",
     "underscore": "^1.8.3",
     "ws": "^0.8.0"
   }

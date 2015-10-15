@@ -19,6 +19,14 @@
         "total_records": {
           "type": "number",
           "description": "Total record count for this resource, regardless of paging."
+        },
+        "record_from": {
+          "type": "number",
+          "description": "First record index returned on this page (1-indexed)"
+        },
+        "record_to": {
+          "type": "number",
+          "description": "Last record index returned on this page (1-indexed)"
         }
       },
       "required": ["requested_page", "items_per_page", "total_pages", "total_records"]

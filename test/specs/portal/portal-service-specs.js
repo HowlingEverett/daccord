@@ -66,26 +66,6 @@ test('Reprocesses request bodies into an iterable property', function(t) {
   t.end();
 });
 
-test('Includes imported sub-schemas in JSON body schemas', function(t) {
-  const fs = require('fs');
-  const DEFINITIONS_SCHEMA = require('./fixtures/definitions.json');
-  sinon.stub(fs, 'readFile').yieldsAsync(null, DEFINITIONS_SCHEMA);
-  let firstPost = apiSpec.resources[0].resources[0].tabs[1].method;
-  let schema = JSON.parse(firstPost.body[0].schema);
-  t.notOk(schema.properties.paging.$ref, '$ref key gone');
-  t.ok(schema.properties.paging.properties, 'sub-schema properties rendered');
-  var propKeys = Object.keys(schema.properties.paging.properties);
-  t.deepEqual(propKeys, [
-    'requested_page',
-    'records_per_page',
-    'total_pages',
-    'total_records'
-  ], 'Sub-schema properties all set in-line under parent schema key');
-
-  fs.readFile.restore();
-  t.end();
-});
-
 test('End API List Transformation Tests', function(t) {
   raml.loadApi.restore();
   t.end();

@@ -1,15 +1,18 @@
 'use strict';
 
+
+
 let slug = require('slug');
 let _ = require('underscore');
 
 let raml = require('../raml');
 
 /**
- * Loads the API specification for the given RAML or api_definitions/api.raml and processes
- * the data into a format ready for rendering into the Portal List page
- * @param {string} [apiPath] Relative path to a RAML file. If this isn't set, the service
- * will attempt to laod the default RAML: ./api_definitions/api.raml
+ * Loads the API specification for the given RAML or api_definitions/api.raml
+ * and processes the data into a format ready for rendering into the Portal List
+ * page
+ * @param {string} [apiPath] Relative path to a RAML file. If this isn't set,
+ * the service will attempt to load the default RAML: ./api_definitions/api.raml
  */
 module.exports.listTabs = function*(apiPath) {
   let apiSpec = yield raml.loadApi(apiPath);

@@ -70,3 +70,14 @@ module.exports.upperCase = function(value) {
     return value.toUpperCase();
   }
 };
+
+/**
+ * Pretty-prints a JSON string from a given object
+ * @param {object} object JSON-compatible javascript object
+ * @param {number} [spacing] Number of spaces to use when padding the JSON.
+ * If you don't specify this, you'll get minified JSON.
+ * @returns {string} JSON stringified, pretty-printed by optional spacing.
+ */
+module.exports.json = function(object, spacing) {
+  return JSON.stringify(object, null, spacing);
+};

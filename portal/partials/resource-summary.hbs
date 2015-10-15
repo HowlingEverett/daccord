@@ -81,7 +81,7 @@
 
                 {{#if schema}}
                 <h6>Schema</h6>
-                <pre><code class="language-javascript">{{schema}}</code></pre>
+                <pre><code class="language-javascript">{{json schema 2}}</code></pre>
                 {{/if}}
                 {{/each}}
             </div>
@@ -98,7 +98,7 @@
 
                     {{#if schema}}
                     <h6>Schema</h6>
-                    <pre><code class="language-{{languageFromContentType contentType}}">{{schema}}</code></pre>
+                    <pre><code class="language-{{languageFromContentType contentType}}">{{json schema 2}}</code></pre>
                     {{/if}}
                     {{/each}}
                 </div>

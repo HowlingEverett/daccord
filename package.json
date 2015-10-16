@@ -26,6 +26,7 @@
     "babel": "^5.8.23",
     "browserify": "^11.2.0",
     "istanbul": "^0.3.21",
+    "jsdoc": "^3.3.3",
     "karma": "^0.13.10",
     "sinon": "^1.17.1",
     "sinon-as-promised": "^4.0.0",

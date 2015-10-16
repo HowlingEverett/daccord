@@ -41,8 +41,13 @@ module.exports.loadApi = function(filename) {
 
 function processSchemas(apiSpec, rootPath, done) {
   traverse(apiSpec, function(node, next) {
-    if (this.key === 'schema') {
-      let schema = JSON.parse(node);
+    if (this.key === 'schema' || this.key === 'example') {
+      let schema;
+      try {
+        schema = JSON.parse(node);
+      } catch (e) {
+        return next();
+      }
       let self = this;
       self.parent[self.key] = schema;
       processSchemas(schema, rootPath, function(err, updatedSchema) {

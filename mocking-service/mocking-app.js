@@ -24,18 +24,20 @@ class MockingApp {
     this.ramlPath = ramlPath;
   }
 
-  *run() {
-    let router = yield routes(this.ramlPath);
-    this.app.use(router.routes());
-    this.server = http.createServer(this.app.callback())
-      .listen(this.port, function(err) {
-        if (err) {
-          let errorMessage = util.format('%s:%s', MESSAGE_TYPES.error, err);
-          return process.send(errorMessage);
-        }
-        let liveMessage = util.format('%s:%s', MESSAGE_TYPES.live, '');
-        return process.send(liveMessage);
-      });
+  run() {
+    var self = this;
+    routes(this.ramlPath).then(function(router) {
+      self.app.use(router.routes());
+      self.server = http.createServer(self.app.callback())
+        .listen(self.port, function(err) {
+          if (err) {
+            let errorMessage = util.format('%s:%s', MESSAGE_TYPES.error, err);
+            return process.send(errorMessage);
+          }
+          let liveMessage = util.format('%s:%s', MESSAGE_TYPES.live, '');
+          return process.send(liveMessage);
+        });
+    });
   }
 
   shutdown() {
@@ -51,4 +53,3 @@ let ramlPath = args.length >= 2 ? args[1] : undefined;
 let mockingApp = new MockingApp(port, ramlPath);
 process.on('disconnect', mockingApp.shutdown);
 mockingApp.run();
-

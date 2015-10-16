@@ -4,13 +4,13 @@ let path = require('path');
 let Router = require('koa-router');
 let raml = require('../raml');
 
-module.exports = function*(ramlPath) {
+module.exports = function(ramlPath) {
   let router = new Router();
 
-  let apiSpec = yield raml.loadApi(ramlPath);
-  setupRoutes(router, apiSpec);
-
-  return router;
+  return raml.loadApi(ramlPath).then(function(apiSpec) {
+    setupRoutes(router, apiSpec);
+    return router;
+  });
 };
 
 function setupRoutes(router, apiSpec, basePath) {
@@ -32,21 +32,16 @@ function setupResource(router, resource, basePath) {
 
 function setupMethods(router, methodObjects, routePath) {
   methodObjects.forEach(function(methodObj) {
-    router.call(methodObj.method, routePath, routeHandlerFactory(methodObj));
+    var paramPat = /{(\w+)}/;
+    routePath = routePath.replace(paramPat, ':$1');
+    console.log('Registering', methodObj.method.toUpperCase(), routePath);
+    router[methodObj.method](routePath, routeHandlerFactory(methodObj));
   });
 }
 
 // Generates Koa route handlers for different http methods
 function routeHandlerFactory(methodObject) {
-  let httpMethod = methodObject.method.toLowerCase();
-
-  if (['get', 'delete'].indexOf(httpMethod) >= 0) {
-
-  } else if (['post', 'put'].indexOf(httpMethod) >= 0) {
-
-  }
-
   return function*() {
-    this.body = methodObject.responses['200'].example;
+    this.body = methodObject.responses['200'].body['application/json'].example;
   };
 }

@@ -17,8 +17,8 @@ module.exports.enableMocking = function(ramlPath) {
   return new Promise(function(resolve, reject) {
     let childPath = path.resolve(__dirname, './mocking-app');
     let args = ramlPath ? [ramlPath] : [];
-    args.unshift(process.env.PORT + 1);
-    child = fork(childPath, args);
+    args.unshift(parseInt(process.env.PORT) + 1);
+    child = fork(childPath, args, {execArgv: []});
     child.on('message', function(message) {
       if (message.indexOf('MOCKINGLIVE:') >= 0) {
         let rootUrl = message.split(':')[1];

@@ -3,9 +3,22 @@
 let path = require('path');
 let Router = require('koa-router');
 let raml = require('../raml');
+let debug = require('debug')('mocking-service/routes');
 
-module.exports = function(ramlPath) {
-  let router = new Router();
+/**
+ * Parses a RAML document and creates a fully-loaded mock API on a router,
+ * ready to serve from a Koa application.
+ * @param {string} [ramlPath] path to a RAML document, relative to process.cwd.
+ * If you don't set this parameter, the router will attempt to load
+ * ./api_definitions/api.raml
+ * @param {object} [router] If set, routes will be attached to this router. If
+ * you don't pass this argument a new koa-router instance will be created for
+ * you.
+ * @returns {Promise.<object>} instance of koa-router with mock routes for
+ * the API defined in your raml document.
+ */
+module.exports = function(ramlPath, router) {
+  router = router || new Router();
 
   return raml.loadApi(ramlPath).then(function(apiSpec) {
     setupRoutes(router, apiSpec);
@@ -34,7 +47,7 @@ function setupMethods(router, methodObjects, routePath) {
   methodObjects.forEach(function(methodObj) {
     var paramPat = /{(\w+)}/;
     routePath = routePath.replace(paramPat, ':$1');
-    console.log('Registering', methodObj.method.toUpperCase(), routePath);
+    debug('Registering', methodObj.method.toUpperCase(), routePath);
     router[methodObj.method](routePath, routeHandlerFactory(methodObj));
   });
 }

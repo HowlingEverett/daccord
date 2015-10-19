@@ -2,7 +2,9 @@
 
 let sinon = require('sinon');
 require('sinon-as-promised');
+const Immutable = require('immutable');
 const koa = require('koa');
+const http = require('http');
 const supertest = require('supertest');
 const Router = require('koa-router');
 const raml = require('raml-parser');
@@ -10,7 +12,10 @@ const raml = require('raml-parser');
 let test = require('../../tape-as-promised');
 let apiHandlers = require('../../../api/v1');
 
-let booksFixture = require('../portal/fixtures/books.json');
+let booksFixture = Immutable.fromJS(require('../portal/fixtures/books.json'))
+  .toJS();
+
+let server;
 
 test('/api/v1/contract/{resource}', function(t) {
   var request = setupRequest();
@@ -77,13 +82,21 @@ test('/api/v1/contract/{resource} parses schema to object', function(t) {
     });
 });
 
+test('End v1 API basic specs', function(t) {
+  server.close();
+  t.end();
+});
+
 function setupRequest() {
   sinon.stub(raml, 'loadFile')
     .resolves(JSON.parse(JSON.stringify(booksFixture)));
+
   let app = koa();
   let router = new Router();
-  router.get('/api/v1/contract', apiHandlers.contract);
+  router.get('/api/v1/contract$', apiHandlers.contract);
   router.get('/api/v1/contract/:resourceName', apiHandlers.schema);
-  app.use(router.middleware());
-  return supertest(app.listen());
+  app.use(router.routes());
+
+  server = http.createServer(app.callback());
+  return supertest(server);
 }

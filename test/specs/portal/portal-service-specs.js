@@ -2,6 +2,7 @@
 
 var sinon = require('sinon');
 require('sinon-as-promised');
+let Immutable = require('immutable');
 
 var test = require('../../tape-as-promised');
 var raml = require('../../../raml');
@@ -9,7 +10,7 @@ var portalService = require('../../../portal/service');
 
 
 // Fixture containing the output of raml-parser for a sample book API
-var testApi = require('./fixtures/books.json');
+var testApi = Immutable.fromJS(require('./fixtures/books.json')).toJS();
 var apiSpec;
 
 test('Portal Service List API transformations', function*() {

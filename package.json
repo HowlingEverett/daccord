@@ -44,6 +44,7 @@
     "debug": "^2.2.0",
     "es6-promisify": "^3.0.0",
     "handlebars": "^4.0.3",
+    "immutable": "^3.7.5",
     "jquery": "^2.1.4",
     "koa": "^1.0.0",
     "koa-handlebars": "^0.5.7",

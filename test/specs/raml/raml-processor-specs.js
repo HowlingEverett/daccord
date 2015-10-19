@@ -1,15 +1,18 @@
 'use strict';
 
 var fs = require('fs');
+var path = require('path');
 
 var sinon = require('sinon');
 require('sinon-as-promised');
+let Immutable = require('immutable');
 var test = require('../../tape-as-promised');
 var ramlParser = require('raml-parser');
 var raml = require('../../../raml');
 
 const DEFINITIONS_SCHEMA = require('./fixtures/definitions.json');
-const TEST_RAML = require('../portal/fixtures/books.json');
+const TEST_RAML = Immutable.fromJS(require('../portal/fixtures/books.json'))
+  .toJS();
 
 test('RAML Parser wrapper', function(t) {
   sinon.stub(fs, 'readFile').yieldsAsync(null,
@@ -17,6 +20,23 @@ test('RAML Parser wrapper', function(t) {
   sinon.stub(ramlParser, 'loadFile').resolves(TEST_RAML);
 
   t.end();
+});
+
+test('Attempts to load ./api_defintions/api.raml unless specified',
+  function*(t) {
+    yield raml.loadApi();
+    t.ok(ramlParser.loadFile
+      .calledWith(path.resolve('./api_definitions/api.raml')),
+      'Tried to load ./api_definitions/api.raml');
+    ramlParser.loadFile.reset();
+  });
+
+test('Attempts to load passed path relative to cwd if specified', function*(t) {
+  let ramlPath = './api_definitions/whatever.raml';
+  yield raml.loadApi('./api_definitions/whatever.raml');
+  t.ok(ramlParser.loadFile.calledWith(path.resolve(ramlPath)),
+    'Tried to load API definition that\'s passed in');
+  ramlParser.loadFile.reset();
 });
 
 test('Includes imported sub-schemas in JSON body schemas', function*(t) {
@@ -53,4 +73,27 @@ test('End Parser wrapper tests', function(t) {
   ramlParser.loadFile.restore();
   fs.readFile.restore();
   t.end();
+});
+
+test('Throws exception if RAML parser cannot find the file', function(t) {
+  t.plan(1);
+  raml.loadApi('./api_definitions/non-existent.raml')
+    .then(function() {
+      t.fail();
+    })
+    .catch(function(err) {
+      t.ok(err.toString().match(/ENOENT: no such file or directory/),
+        'Error thrown containing ENOENT method');
+    });
+});
+
+test('Throw exception if RAML parser cannot parse the file', function(t) {
+  t.plan(1);
+  raml.loadApi('./test/specs/raml/fixtures/bad-raml.raml')
+    .then(function() {
+      t.fail();
+    })
+    .catch(function(err) {
+      t.equal(err.name, 'YAMLError');
+    });
 });

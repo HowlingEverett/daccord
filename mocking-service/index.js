@@ -11,7 +11,7 @@ let child;
  * responses for the resources included in the provided parsed RAML spec.
  * @param {string} [ramlPath] Path to a RAML file. If not included, the child
  * process will try to load `api_definitions/api.raml`.
- * @returns {Promise} Returns a promise that will resolve to the .
+ * @returns {Promise} Returns a promise that will resolve to the url.
  */
 module.exports.enableMocking = function(ramlPath) {
   return new Promise(function(resolve, reject) {

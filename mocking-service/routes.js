@@ -1,6 +1,7 @@
 'use strict';
 
 let path = require('path');
+let url = require('url');
 let Router = require('koa-router');
 let raml = require('../raml');
 let debug = require('debug')('mocking-service/routes');
@@ -17,14 +18,17 @@ let debug = require('debug')('mocking-service/routes');
  * @returns {Promise.<object>} instance of koa-router with mock routes for
  * the API defined in your raml document.
  */
-module.exports = function(ramlPath, router) {
-  router = router || new Router();
-
+module.exports.buildRoutes = function(ramlPath, router) {
   return raml.loadApi(ramlPath).then(function(apiSpec) {
+    let prefix = apiSpec.baseUri.replace('{version}', apiSpec.version);
+    prefix = url.parse(prefix).pathname;
+    router = router || new Router();
+    router.prefix(prefix);
     setupRoutes(router, apiSpec);
     return router;
   });
 };
+
 
 function setupRoutes(router, apiSpec, basePath) {
   if (!basePath) {

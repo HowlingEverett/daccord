@@ -1,13 +1,17 @@
 'use strict';
 /**
- * Runs a child-process instance of koa that hosts
+ * Runs a child-process instance of koa that runs an isolated HTTP server
+ * and Koa app for hosting mocked routes populated by the examples included
+ * in your RAML file.
  * @module
  */
 
 let util = require('util');
 let http = require('http');
+let EventEmitter = require('events');
 
 let koa = require('koa');
+let debug = require('debug')('mocking-app');
 
 let routes = require('./routes');
 
@@ -15,41 +19,65 @@ let MESSAGE_TYPES = {
   live: 'MOCKINGLIVE',
   error: 'MOCKINGERROR'
 };
-module.exports.MESSAGE_TYPES = MESSAGE_TYPES;
 
-class MockingApp {
+class MockingApp extends EventEmitter {
   constructor(port, ramlPath) {
+    super();
     this.app = koa();
     this.port = port;
     this.ramlPath = ramlPath;
   }
 
+  /**
+   *
+   * @returns {Promise.<object>}
+   */
   run() {
     var self = this;
-    routes(this.ramlPath).then(function(router) {
+    routes.buildRoutes(this.ramlPath).then(function(router) {
       self.app.use(router.routes());
-      self.server = http.createServer(self.app.callback())
-        .listen(self.port, function(err) {
+      self.server = http.createServer(self.app.callback());
+      self.server.listen(self.port, function(err) {
+          let message;
           if (err) {
-            let errorMessage = util.format('%s:%s', MESSAGE_TYPES.error, err);
-            return process.send(errorMessage);
+            message = util.format('%s:%s', MESSAGE_TYPES.error, err);
+            self.emit('mockingserver', err);
+          } else {
+            message = util.format('%s:%s', MESSAGE_TYPES.live, '');
+            self.emit('mockingserver');
           }
-          let liveMessage = util.format('%s:%s', MESSAGE_TYPES.live, '');
-          return process.send(liveMessage);
+
+          if (!process.send) {
+            return debug(message);
+          }
+          return process.send(message);
         });
     });
   }
 
+  /**
+   *
+   */
   shutdown() {
     this.server.close();
   }
 }
 
-// Child-process initialisation
-let args = process.argv.slice(2);
-let port = args[0];
-let ramlPath = args.length >= 2 ? args[1] : undefined;
+function init() {
+  let args = process.argv.slice(2);
+  let port = args[0];
+  let ramlPath = args.length >= 2 ? args[1] : undefined;
 
-let mockingApp = new MockingApp(port, ramlPath);
-process.on('disconnect', mockingApp.shutdown);
-mockingApp.run();
+  let mockingApp = new MockingApp(port, ramlPath);
+  process.on('disconnect', mockingApp.shutdown);
+  mockingApp.run();
+}
+
+// Exports
+module.exports.MESSAGE_TYPES = MESSAGE_TYPES;
+module.exports.MockingApp = MockingApp;
+
+// Child-process initialisation
+if (!module.parent) {
+  init();
+}

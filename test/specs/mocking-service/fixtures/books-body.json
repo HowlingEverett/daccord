@@ -1,0 +1,89 @@
+[
+  {
+    "applicant_count": 35,
+    "days_open": 23,
+    "department": "IT Systems",
+    "id": "1",
+    "stages": [
+      {
+        "applicant_count": 10,
+        "stage": "Shortlist"
+      },
+      {
+        "applicant_count": 5,
+        "stage": "Interview 1"
+      },
+      {
+        "applicant_count": 2,
+        "stage": "Interview 2"
+      },
+      {
+        "applicant_count": 2,
+        "stage": "Assessment"
+      },
+      {
+        "applicant_count": 1,
+        "stage": "Offer"
+      }
+    ],
+    "title": "Systems Engineer, Azure"
+  },
+  {
+    "applicant_count": 75,
+    "days_open": 13,
+    "department": "Product Marketing",
+    "id": "2",
+    "stages": [
+      {
+        "applicant_count": 10,
+        "stage": "Shortlist"
+      },
+      {
+        "applicant_count": 5,
+        "stage": "Interview 1"
+      },
+      {
+        "applicant_count": 0,
+        "stage": "Interview 2"
+      },
+      {
+        "applicant_count": 0,
+        "stage": "Assessment"
+      },
+      {
+        "applicant_count": 0,
+        "stage": "Offer"
+      }
+    ],
+    "title": "Junior Marketing Manager"
+  },
+  {
+    "applicant_count": 5,
+    "days_open": 100,
+    "department": "Software Operations",
+    "id": "3",
+    "stages": [
+      {
+        "applicant_count": 2,
+        "stage": "Shortlist"
+      },
+      {
+        "applicant_count": 2,
+        "stage": "Interview 1"
+      },
+      {
+        "applicant_count": 2,
+        "stage": "Interview 2"
+      },
+      {
+        "applicant_count": 2,
+        "stage": "Assessment"
+      },
+      {
+        "applicant_count": 0,
+        "stage": "Offer"
+      }
+    ],
+    "title": "Senior Web Developer"
+  }
+]

@@ -1,7 +1,7 @@
-<h1 class="display-2">{{title}}</h1>
+<h1 class="display-2">{{apiList.title}}</h1>
 
 <div class="api-documentation">
-    {{#each documentation}}
+    {{#each apiList.documentation}}
     <div class="api-document">
         <h2>{{title}}</h2>
 
@@ -15,7 +15,7 @@
 <div class="api-list">
     <h2>API Resources</h2>
 
-    {{#each resources}}
+    {{#each apiList.resources}}
         {{> resource-summary}}
     {{/each}}
 </div>

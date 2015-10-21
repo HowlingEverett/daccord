@@ -33,25 +33,23 @@ class MockingApp extends EventEmitter {
    * @returns {Promise.<object>}
    */
   run() {
-    var self = this;
-    routes.buildRoutes(this.ramlPath).then(function(router) {
-      self.app.use(router.routes());
-      self.server = http.createServer(self.app.callback());
-      self.server.listen(self.port, function(err) {
-          let message;
-          if (err) {
-            message = util.format('%s:%s', MESSAGE_TYPES.error, err);
-            self.emit('mockingserver', err);
-          } else {
-            message = util.format('%s:%s', MESSAGE_TYPES.live, '');
-            self.emit('mockingserver');
-          }
-
-          if (!process.send) {
-            return debug(message);
-          }
-          return process.send(message);
-        });
+    routes.buildRoutes(this.ramlPath).then(router => {
+      this.app.use(router.routes());
+      this.server = http.createServer(this.app.callback());
+      this.server.listen(this.port, err => {
+        let message;
+        if (err) {
+          message = util.format('%s:%s', MESSAGE_TYPES.error, err);
+          this.emit('mockingserver', err);
+        } else {
+          message = util.format('%s:%s', MESSAGE_TYPES.live, '');
+          this.emit('mockingserver');
+        }
+        debug(message, 'port:', this.port);
+        if (process.send) {
+          process.send(message);
+        }
+      });
     });
   }
 
@@ -59,6 +57,7 @@ class MockingApp extends EventEmitter {
    *
    */
   shutdown() {
+    debug('Shutting down mocking app on port', this.port);
     this.server.close();
   }
 }
@@ -69,7 +68,9 @@ function init() {
   let ramlPath = args.length >= 2 ? args[1] : undefined;
 
   let mockingApp = new MockingApp(port, ramlPath);
-  process.on('disconnect', mockingApp.shutdown);
+  process.on('disconnect', () => {
+    mockingApp.shutdown();
+  });
   mockingApp.run();
 }
 

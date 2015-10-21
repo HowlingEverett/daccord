@@ -9,6 +9,9 @@ require('../vendor/bootstrap-4.0.0-alpha/dist/js/umd/tab');
 // Prism.js Syntax Hightlighting
 require('prismjs');
 
+// Mocking service UI
+require('./mocking-ui');
+
 function initTabs() {
   $('.nav-item:first-child [role="tab"]').tab('show');
 }

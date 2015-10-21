@@ -4,11 +4,16 @@
         <li class="nav-item selected">
             <a class="nav-link" href="/">Docs</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/validate">Validate</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/mock">Mock</a>
-        </li>
     </ul>
+    <div class="navbar-form pull-right">
+        <ul class="nav">
+            <li class="nav-item">
+                {{#if mockingEnabled}}
+                    <a class="btn btn-success-outline" href="/api/v1/mocking" data-enable-mocking="false">Mocking enabled</a>
+                {{else}}
+                    <a class="btn btn-danger-outline" href="/api/v1/mocking" data-enable-mocking="true">Mocking disabled</a>
+                {{/if}}
+            </li>
+        </ul>
+    </div>
 </nav>

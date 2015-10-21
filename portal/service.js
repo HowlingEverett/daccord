@@ -6,6 +6,7 @@ let slug = require('slug');
 let _ = require('underscore');
 
 let raml = require('../raml');
+let mockingService = require('../mocking-service');
 
 /**
  * Loads the API specification for the given RAML or api_definitions/api.raml
@@ -18,6 +19,10 @@ module.exports.listTabs = function*(apiPath) {
   let apiSpec = yield raml.loadApi(apiPath);
   apiSpec.resources = processToTabs(apiSpec.resources, apiSpec);
   return apiSpec;
+};
+
+module.exports.isMockingEnabled = function() {
+  return mockingService.mockingEnabled();
 };
 
 // Recursively processes resources to generate tab objects

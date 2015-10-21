@@ -6,24 +6,49 @@ var url = require('url');
 var _ = require('underscore');
 var ramlParser = require('raml-parser');
 
+var mockingService = require('../../mocking-service');
+
 /**
  * Request handler for rendering the entire API contract as JSON. By default
  * this is sourced from a RAML file located at ./api_definitions/api.raml.
  * However, you can pass a specific API file by name
- * @param {string} [this.params.id] name of the RAML file you want to load.
- * This file must exist inside the api_definitions directory, and contain the
- * .raml extension.
+ * @param {string} [this.query.contract] name of the RAML file you want to
+ * load. This file must exist inside the api_definitions directory, and contain
+ * the .raml extension.
  */
 module.exports.contract = function*() {
-  this.body = yield resolveRamlPath(this.query.contractName);
+  this.body = yield resolveRamlPath(this.query.contract);
 };
 
 /**
  * Get the schema for a specific resource, including descriptions of all
  */
 module.exports.schema = function*() {
-  var apiSpec = yield resolveRamlPath(this.query.contractName);
+  var apiSpec = yield resolveRamlPath(this.query.contract);
   this.body = buildResourceDescription(this.params.resourceName, apiSpec);
+};
+
+/**
+ * Update the state of the mocking service
+ */
+module.exports.mocking = function*() {
+  let enable = this.query.enable && this.query.enable === 'true';
+  let ramlPath = this.query.raml;
+  if (enable) {
+    try {
+      var rootUrl = yield mockingService.enableMocking(ramlPath);
+      this.body = {
+        active: true,
+        rootUrl: rootUrl
+      };
+    } catch (e) {
+      this.status = 500;
+      this.body = {error: e};
+    }
+  } else {
+    mockingService.disableMocking();
+    this.body = {active: false};
+  }
 };
 
 function *resolveRamlPath(ramlId) {

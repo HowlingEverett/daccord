@@ -15,11 +15,13 @@ let debug = require('debug')('mocking-service/routes');
  * @param {object} [router] If set, routes will be attached to this router. If
  * you don't pass this argument a new koa-router instance will be created for
  * you.
- * @returns {Promise.<object>} instance of koa-router with mock routes for
- * the API defined in your raml document.
+ * @returns {Promise.<object>} Promise resolving to an instance of koa-router
+ * with mock routes for the API defined in your raml document.
  */
 module.exports.buildRoutes = function(ramlPath, router) {
   return raml.loadApi(ramlPath).then(function(apiSpec) {
+    debug('Building mock routes for RAML at',
+      ramlPath || './api_definitions/api.raml');
     let prefix = apiSpec.baseUri.replace('{version}', apiSpec.version);
     prefix = url.parse(prefix).pathname;
     router = router || new Router();

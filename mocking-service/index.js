@@ -4,7 +4,8 @@
 let fork = require('child_process').fork;
 let path = require('path');
 
-let child;
+let child = null;
+
 
 /**
  * Spin up a mocking service instance to handle test requests and mocked
@@ -36,6 +37,12 @@ module.exports.enableMocking = function(ramlPath) {
  * functionality.
  */
 module.exports.disableMocking = function() {
-  child.disconnect();
-  child = null;
+  if (child) {
+    child.disconnect();
+    child = null;
+  }
+};
+
+module.exports.mockingEnabled = function() {
+  return child !== null;
 };

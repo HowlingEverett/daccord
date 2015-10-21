@@ -1,5 +1,9 @@
 'use strict';
 
+let child = require('child_process');
+let EventEmitter = require('events');
+let path = require('path');
+
 let sinon = require('sinon');
 require('sinon-as-promised');
 const Immutable = require('immutable');
@@ -82,6 +86,38 @@ test('/api/v1/contract/{resource} parses schema to object', function(t) {
     });
 });
 
+test('/api/v1/mocking?enable=true enables mocking service', function(t) {
+  var request = setupRequest();
+  class MockEmitter extends EventEmitter {
+    constructor() {
+      super();
+      this.emit('message', 'MOCKINGLIVE:http://wherever.com');
+    }
+  }
+  sinon.stub(child, 'fork').returns(new MockEmitter());
+  request.get('/api/v1/mocking')
+    .query({enable: true})
+    .set('Accept', 'application/json')
+    .expect(200)
+    .end(function(err) {
+      if (err) {
+        t.fail();
+        return t.end();
+      }
+
+      t.ok(child.fork.calledWith(path.resolve('./mocking-service/mocking-app')),
+        'Mocking application forked as child');
+
+      raml.loadFile.restore();
+      t.end();
+    });
+});
+
+test('/api/v1/mocking?enable=false disables mocking service', function(t) {
+  var request = setupRequest();
+  t.end();
+});
+
 test('End v1 API basic specs', function(t) {
   server.close();
   t.end();
@@ -95,6 +131,7 @@ function setupRequest() {
   let router = new Router();
   router.get('/api/v1/contract$', apiHandlers.contract);
   router.get('/api/v1/contract/:resourceName', apiHandlers.schema);
+  router.put('/api/v1/mocking', apiHandlers.mocking);
   app.use(router.routes());
 
   server = http.createServer(app.callback());

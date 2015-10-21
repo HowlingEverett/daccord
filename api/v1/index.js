@@ -1,7 +1,6 @@
 'use strict';
 
 var path = require('path');
-var url = require('url');
 
 var _ = require('underscore');
 var ramlParser = require('raml-parser');
@@ -105,7 +104,7 @@ function flattenMethods(resource, apiRoot, basePath) {
 }
 
 function parseBodySchemas(bodyObj) {
-  _.each(bodyObj, function(body, contentType) {
+  _.each(bodyObj, function(body) {
     if (body.schema) {
       body.schema = JSON.parse(body.schema);
     }

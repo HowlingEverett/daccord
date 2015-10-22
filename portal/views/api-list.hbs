@@ -1,21 +1,39 @@
 <h1 class="display-2">{{apiList.title}}</h1>
 
-<div class="api-documentation">
-    {{#each apiList.documentation}}
-    <div class="api-document">
-        <h2>{{title}}</h2>
+<div class="row">
+    <nav class="toc-nav col-sm-4">
+        <h2>Contents</h2>
+        <div id="api-documentation-toc">
+            <h3>Introduction</h3>
+            {{toc apiList.toc}}
+        </div>
 
-        <div class="api-document-content">
-            {{markdown content}}
+        <div id="api-resource-index">
+            <h3>API Resources</h3>
+
+            {{toc apiList.resourceIndex}}
+        </div>
+    </nav>
+
+    <div class="col-sm-8">
+        <div class="api-documentation">
+            {{#each apiList.documentation}}
+                <div class="api-document">
+                    <h2>{{title}}</h2>
+
+                    <div class="api-document-content">
+                        {{markdown content}}
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+
+        <div class="api-list">
+            <h2>API Resources</h2>
+
+            {{#each apiList.resources}}
+                {{> resource-summary}}
+            {{/each}}
         </div>
     </div>
-    {{/each}}
-</div>
-
-<div class="api-list">
-    <h2>API Resources</h2>
-
-    {{#each apiList.resources}}
-        {{> resource-summary}}
-    {{/each}}
 </div>

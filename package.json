@@ -52,6 +52,7 @@
     "koa-postcss": "^0.3.2",
     "koa-router": "^5.1.2",
     "koa-static": "^1.4.9",
+    "markdown-to-ast": "^3.0.7",
     "marked": "^0.3.5",
     "postcss": "^5.0.8",
     "postcss-calc": "^5.0.0",

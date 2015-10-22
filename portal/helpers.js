@@ -5,17 +5,19 @@ let slug = require('slug');
 let marked = require('marked');
 
 /**
- * Slugifies a string, removing spaces and non-url-compatible characters, and
+ * Slugifies strings, removing spaces and non-url-compatible characters, and
  * replacing them with hyphens. Also lower-cases everything. Basically creates
  * a URL 'slug'. Gracefully degrades: if you pass it a bad value, it will simply
- * return an empty string.
- * @param {string} str input string you want to slugify
+ * return an empty string. If you pass multiple arguments, the strings will be
+ * combined into a single long slug.
+ * @param {string...} arguments input strings you want to slugify
  * @returns {string} Processed string, with invalid characters replaced by
  * hyphens
  */
-module.exports.slug = function(str) {
+module.exports.slug = function() {
+  let args = Array.prototype.slice.call(arguments, 0, arguments.length - 1);
   try {
-    return slug(str, {mode: 'rfc3986'});
+    return slug(args.join(' '), {mode: 'rfc3986'});
   } catch (e) {
     return '';
   }
@@ -81,3 +83,29 @@ module.exports.upperCase = function(value) {
 module.exports.json = function(object, spacing) {
   return JSON.stringify(object, null, spacing);
 };
+
+/**
+ *
+ * @param {Array} headingsTree
+ * @returns {Handlebars.SafeString} nested ul of TOC links
+ */
+module.exports.toc = function(headingsTree) {
+  return new Handlebars.SafeString(generateUl(headingsTree));
+};
+
+function generateUl(headingsArray) {
+  return `<ul class="toc">${generateListItems(headingsArray)}</ul>`;
+}
+
+function generateListItems(headingsArray) {
+  let lis = [];
+  for (let heading of headingsArray) {
+    lis.push(`<li class="toc-item">
+               <a href="#${heading.id}">${heading.title}</a>
+             </li>`);
+    if (heading.children) {
+      lis.push(generateUl(heading.children));
+    }
+  }
+  return lis.join('\n');
+}

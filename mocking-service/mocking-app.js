@@ -1,8 +1,8 @@
 'use strict';
 /**
- * Runs a child-process instance of koa that runs an isolated HTTP server
- * and Koa app for hosting mocked routes populated by the examples included
- * in your RAML file.
+ * Runs a child-process instance of koa that runs in an isolated HTTP server
+ * for hosting mocked routes populated by the examples included in your RAML
+ * file.
  * @module
  */
 
@@ -57,7 +57,10 @@ class MockingApp extends EventEmitter {
    *
    */
   shutdown() {
-    debug('Shutting down mocking app on port', this.port);
+    debug('Shutting down mocking server on port', this.port, '...');
+    this.server.on('close', () => {
+      debug('Mocking server closed');
+    });
     this.server.close();
   }
 }

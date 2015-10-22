@@ -1,4 +1,4 @@
-<div class="api-resource">
+<div id="{{slug parentUri relativeUri}}" class="api-resource">
     <h3>{{parentUri}}{{relativeUri}}</h3>
 
     <div class="api-resource-methods">
@@ -77,7 +77,7 @@
                 <h5>{{contentType}}</h5>
 
                 <h6>Example</h6>
-                <pre><code class="language-javascript">{{example}}</code></pre>
+                <pre><code class="language-javascript">{{json example 2}}</code></pre>
 
                 {{#if schema}}
                 <h6>Schema</h6>
@@ -94,7 +94,7 @@
                     <h6>{{contentType}}</h6>
 
                     <h6>Example</h6>
-                    <pre><code class="language-{{languageFromContentType contentType}}">{{example}}</code></pre>
+                    <pre><code class="language-{{languageFromContentType contentType}}">{{json example 2}}</code></pre>
 
                     {{#if schema}}
                     <h6>Schema</h6>
